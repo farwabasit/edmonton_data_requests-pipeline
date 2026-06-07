@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: edmonton_analytics
+    schema: bronze
+    config:
+          freshness:
+            warn_after:
+              count: 24
+              period: hour
+            error_after:
+              count: 48
+              period: hour
+          loaded_at_field: ingested_at
+    tables:
+      - name: edmonton_requests_raw
+        config:
+          freshness: null

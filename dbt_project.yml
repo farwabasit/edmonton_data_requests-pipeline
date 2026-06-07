@@ -1,0 +1,15 @@
+name: 'edmonton_pipeline'
+version: '1.0.0'
+profile: 'default'
+
+models:
+  edmonton_pipeline:
+    staging:
+      +materialized: view
+      +schema: silver
+    intermediate:
+      +materialized: table
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: gold
