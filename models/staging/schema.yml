@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: stg_requests
+    description: "Cleaned Edmonton API data - JSON parsed into typed columns, null request numbers filtered"
+    columns:
+      - name: request_number
+        description: "Unique identifier for each citizen data request"
+        tests:
+          - unique
+          - not_null
+      - name: request_description
+        description: "Description of what data the citizen is requesting"
+      - name: request_details
+        description: "Additional details provided by the requester"
+      - name: request_creation_date
+        description: "Date the request was submitted to the city"
+        tests:
+          - not_null
+      - name: status
+        description: "Current processing status of the request"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['New', 'Under Review', 'In Progress', 'On Hold', 
+                        'Completed', 'Cancelled', 'Declined', 'Rejected',
+                        'Published', 'Done', 'NEW', 'IN PROGRESS', 
+                        'CLOSED', 'PAUSED', 'Closed', 'Cancelled']
+      - name: status_date
+        description: "Date the status was last updated"
+      - name: department
+        description: "City department responsible for fulfilling the request. 
+                      Note: nullable - Edmonton API does not always assign 
+                      a department at request creation stage"
+      - name: dataset_published_date
+        description: "Date the requested dataset was published, if fulfilled"
+      - name: ingested_at
+        description: "Timestamp when this record was loaded into Snowflake bronze layer"
+
+  - name: fct_requests_by_dept
+    description: "Gold table - request counts aggregated by department and status for Power BI"
+    columns:
+      - name: department
+        description: "City department name. Note: nullable - Edmonton API does not always assign a department at request creation stage"
+      - name: status
+        description: "Request status value"
+        tests:
+          - not_null
+      - name: request_count
+        description: "Total number of requests received by this department"
+        tests:
+          - not_null

@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: fct_dept_performance
+    description: "Gold table - department performance metrics including avg days to resolution"
+    columns:
+      - name: department
+        description: "City department name. Note: nullable - Edmonton API does not always assign a department at request creation stage"
+        tests:
+          - unique
+      - name: total_requests
+        description: "Total requests handled by department, minimum 5 required"
+        tests:
+          - not_null
+      - name: avg_days_to_resolution
+        description: "Average days from request creation to status date"
+
+  - name: fct_status_flow
+    description: "Gold table - request counts grouped by status"
+    columns:
+      - name: status
+        description: "Request status value"
+        tests:
+          - unique
+          - not_null
+      - name: total_requests
+        description: "Number of requests in this status"
+        tests:
+          - not_null
